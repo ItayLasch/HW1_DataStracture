@@ -52,6 +52,10 @@ class AVLTree
                 throw PlayerNotExsist();
             }
             Node<T> node_to_remove = FindItem(id);
+            if(node_to_remove->left == nullptr){
+                node_to_remove->right->parent = node_to_remove->parent;
+                node_to_remove->parent
+            }
             
         }
 

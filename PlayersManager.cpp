@@ -40,6 +40,8 @@ void PlayersManager::AddPlayer(int PlayerID, int GroupID, int Level)
     Player *newP = new Player(PlayerID, Level, g);
     g->getPlayersByID().AddItem(newP);
     g->getPlayersByLevel().AddItem(newP);
+    this->Players_by_ID.AddItem(newP);
+    this->Players_by_Level.AddItem(newP);
 
     if(Level > this->Highest_ranked_player->getLevel())
     {
