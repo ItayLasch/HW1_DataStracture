@@ -1,6 +1,7 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 #include <stdio.h>
+#include <iostream>
 
 template <class T>
 class AVLTree
@@ -29,7 +30,9 @@ class AVLTree
         int size;
     
         void replaceNodes(Node<T>* node1, Node<T>* node2){
-            Node<T>* temp = node1;
+            Node<T> temp = node1;
+            bool parent1 = false;//node1 left son
+            bool parent2 = false;//node2 left son
             node1->parent = node2->parent;
             node1->left = node2->left;
             node1->right = node2->right;
@@ -179,6 +182,15 @@ class AVLTree
                 temp = temp->right;
             }
             return temp->data;
+        }
+
+        void print_tree(Node<T>* node){
+            if(this == nullptr){
+                return;
+            }
+            print_tree(node->left);
+            std::cout << node->data;
+            print_tree(node->right);
         }
         class EmptyDataSystem(): public std::exception
         class PlayerNotExsist(): public std::exception
