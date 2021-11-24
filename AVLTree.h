@@ -27,7 +27,6 @@ public:
         return this->data;
     }
 
-
     int static GetHeight(Node<T> *node)
     {
         if (node == nullptr)
@@ -51,8 +50,6 @@ public:
 
     friend AVLTree<T>;
 };
-
-
 
 template <class T>
 class AVLTree
@@ -150,10 +147,11 @@ public:
         root = copy_tree(other.root, nullptr);
     }
 
-    Node<T> *LL(Node<T> *curr)
+    void LL(Node<T> *curr)
     {
         if (curr == nullptr)
-            return curr;
+            return;
+
         Node<T> *temp = curr->left;
         curr->left = curr->left->right;
         if (curr->left != nullptr)
@@ -179,13 +177,12 @@ public:
         curr->parent = temp;
         curr->height--;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
-        return temp;
     }
 
-    Node<T> *RR(Node<T> *curr)
+    void RR(Node<T> *curr)
     {
         if (curr == nullptr)
-            return curr;
+            return;
 
         Node<T> *temp = curr->right;
         curr->right = curr->right->left;
@@ -211,21 +208,18 @@ public:
         curr->parent = temp;
         curr->height--;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
-        return temp;
     }
 
-    Node<T>* RL(Node<T> *curr)
+    void RL(Node<T> *curr)
     {
         LL(curr->right);
-        curr = RR(curr);
-        return curr;
+        RR(curr);
     }
 
-    Node<T> *LR(Node<T> *curr)
+    void LR(Node<T> *curr)
     {
         RR(curr->left);
-        curr = LL(curr);
-        return curr;
+        LL(curr);
     }
 
     void print_tree(Node<T> *node)
@@ -322,48 +316,64 @@ public:
 
     void removeItem(int id)
     {
-        if (!this->isExists(id))
+        Node<T> *node_to_remove = FindItem(id);
+        if (node_to_remove == nullptr)
         {
             throw PlayerNotExsist();
         }
-        Node<T> *node_to_remove = FindItem(id);
-        if (node_to_remove->left == nullptr)
+ 
+        if (node_to_remove->left == nullptr && node_to_remove->right == nullptr) // is leaf
         {
-            node_to_remove->right->parent = node_to_remove->parent;
-            if (node_to_remove == node_to_remove->parent->left)
+            if(node_to_remove->parent == nullptr) // is root
+            {
+                delete node_to_remove;
+                return;
+            }
+            else if(node_to_remove == node_to_remove->parent->left){
+                node_to_remove->parent->left = nullptr;
+            }
+            else if (node_to_remove == node_to_remove->parent->right)
+            {
+                node_to_remove->parent->right = nullptr;
+            }
+
+            delete node_to_remove;
+        }
+        else if (node_to_remove->left == nullptr && node_to_remove->right != nullptr)
+        {
+            if (node_to_remove->parent == nullptr) // is root
+            {
+                node_to_remove->right->parent = nullptr;
+                delete node_to_remove;
+                return;
+            }
+            else if (node_to_remove == node_to_remove->parent->left)
             {
                 node_to_remove->parent->left = node_to_remove->right;
             }
-            else
+            else if (node_to_remove == node_to_remove->parent->right)
             {
                 node_to_remove->parent->right = node_to_remove->right;
             }
+            node_to_remove->right->parent = node_to_remove->parent;
+            delete node_to_remove;
         }
-        else if (node_to_remove->right == nullptr)
+        else if(node_to_remove->left != nullptr)
         {
-            node_to_remove->left->parent = node_to_remove->parent;
-            if (node_to_remove == node_to_remove->parent->left)
+            Node<T> *min_replace = GetMinNode(node_to_remove);
+            Node<T> temp_p = min_replace->parent;
+            min_replace->parent->left = node_to_remove;
+            min_replace->parent = node_to_remove->parent;
+            if(node_to_remove->parent != nullptr && node_to_remove == node_to_remove->parent->left)
             {
-                node_to_remove->parent->left = node_to_remove->left;
+                node_to_remove->parent->left = min_replace;
             }
-            else
+            else if (node_to_remove->parent != nullptr && node_to_remove == node_to_remove->parent->right)
             {
-                node_to_remove->parent->right = node_to_remove->left;
+                node_to_remove->parent->right = min_replace;
             }
+            node_to_remove->parent = temp_p;
         }
-        else
-        {
-            Node<T> *temp = GetMinNode(node_to_remove->right);
-            replaceNodes(temp, node_to_remove);
-            if (node_to_remove->right != nullptr)
-            {
-                node_to_remove->right = node_to_remove->parent;
-            }
-            node_to_remove->parent->left = node_to_remove->right;
-        }
-        delete (node_to_remove);
-        this->size--;
-        //add roll functions**********************************************************************************************************
     }
 
     int getSize()
