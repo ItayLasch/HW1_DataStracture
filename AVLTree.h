@@ -18,7 +18,7 @@ public:
     Node<T> *parent;
     int height;
 
-    Node(T data) : data(data), left(nullptr), right(nullptr), parent(nullptr) {}
+    Node(T data) : data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
     ~Node() = default;
     Node(const Node &other) = default;
     Node &operator=(const Node &other) = default;
@@ -27,52 +27,6 @@ public:
         return this->data;
     }
 
-    //O(logn) n - size of the tree
-    void AddItemAux(T new_data)
-    {
-
-        if (this->left == nullptr && this->right == nullptr)
-        {
-            Node<T> *new_node = new Node<T>(new_data);
-            if (this->data > new_data)
-            {
-                this->left = new_node;
-            }
-            else
-            {
-                this->right = new_node;
-            }
-            new_node->parent = this;
-        }
-        else if (this->data > new_data)
-        {
-            if (this->left == nullptr)
-            {
-                Node<T> *new_node = new Node<T>(new_data);
-                this->left = new_node;
-                new_node->parent = this;
-            }
-            else
-            {
-                this->left->AddItemAux(new_data);
-            }
-        }
-        else
-        {
-            if (this->right == nullptr)
-            {
-                Node<T> *new_node = new Node<T>(new_data);
-                this->right = new_node;
-                new_node->parent = this;
-            }
-            else
-            {
-                this->right->AddItemAux(new_data);
-            }
-        }
-
-        this->height++;
-    }
 
     int static GetHeight(Node<T> *node)
     {
@@ -90,9 +44,10 @@ public:
         {
             throw NullArg();
         }
-
         return GetHeight(curr->left) - GetHeight(curr->right);
     }
+
+    
 
     friend AVLTree<T>;
 };
@@ -195,10 +150,10 @@ public:
         root = copy_tree(other.root, nullptr);
     }
 
-    void LL(Node<T> *curr)
+    Node<T> *LL(Node<T> *curr)
     {
         if (curr == nullptr)
-            return;
+            return curr;
         Node<T> *temp = curr->left;
         curr->left = curr->left->right;
         if (curr->left != nullptr)
@@ -224,12 +179,13 @@ public:
         curr->parent = temp;
         curr->height--;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
+        return temp;
     }
 
-    void RR(Node<T> *curr)
+    Node<T> *RR(Node<T> *curr)
     {
         if (curr == nullptr)
-            return;
+            return curr;
 
         Node<T> *temp = curr->right;
         curr->right = curr->right->left;
@@ -255,18 +211,21 @@ public:
         curr->parent = temp;
         curr->height--;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
+        return temp;
     }
 
-    void RL(Node<T> *curr)
+    Node<T>* RL(Node<T> *curr)
     {
         LL(curr->right);
-        RR(curr);
+        curr = RR(curr);
+        return curr;
     }
 
-    void LR(Node<T> *curr)
+    Node<T> *LR(Node<T> *curr)
     {
         RR(curr->left);
-        LL(curr);
+        curr = LL(curr);
+        return curr;
     }
 
     void print_tree(Node<T> *node)
@@ -287,9 +246,78 @@ public:
             root = new Node<T>(new_data);
         }
         else
-            this->root->AddItemAux(new_data);
+            AddItemAux(root, new_data);
         this->size++;
-        
+    }
+
+    //O(logn) n - size of the tree
+    void AddItemAux(Node<T>* curr, T new_data)
+    {
+        if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
+        {
+            Node<T> *new_node = new Node<T>(new_data);
+            if (curr->data > new_data)
+            {
+                curr->left = new_node;
+            }
+            else
+            {
+                curr->right = new_node;
+            }
+            new_node->parent = curr;
+        }
+        else if (curr->data > new_data)
+        {
+            if (curr->left == nullptr)
+            {
+                Node<T> *new_node = new Node<T>(new_data);
+                curr->left = new_node;
+                new_node->parent = curr;
+            }
+            else
+            {
+                AddItemAux(curr->left, new_data);
+            }
+        }
+        else
+        {
+            if (curr->right == nullptr)
+            {
+                Node<T> *new_node = new Node<T>(new_data);
+                curr->right = new_node;
+                new_node->parent = curr;
+            }
+            else
+            {
+                AddItemAux(curr->right, new_data);
+            }
+        }
+
+        int bf = curr->BFcalc(curr);
+        if (bf == 2)
+        {
+            if (curr->BFcalc(curr->left) >= 0)
+            {
+                LL(curr);
+            }
+            else
+            { //bf = -1
+                LR(curr);
+            }
+        }
+        else if (bf == -2)
+        {
+            if (curr->BFcalc(curr->right) <= 0)
+            {
+                RR(curr);
+            }
+            else
+            {
+                RL(curr);
+            }
+
+        }
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
     }
 
     void removeItem(int id)
