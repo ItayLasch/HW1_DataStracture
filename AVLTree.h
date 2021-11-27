@@ -39,14 +39,12 @@ public:
 
     int BFcalc(Node<T> *curr)
     {
-        if(curr == nullptr)
+        if (curr == nullptr)
         {
             throw NullArg();
         }
         return GetHeight(curr->left) - GetHeight(curr->right);
     }
-
-    
 
     friend AVLTree<T>;
 };
@@ -87,25 +85,25 @@ public:
 
     //O(logn) n - size of the tree
     //return the node
-    Node<T> FindItem(int id)
+    Node<T> *FindItem(Node<T> *curr, int id)
     {
-        if (this == nullptr)
+        if (curr == nullptr)
         {
             return nullptr;
         }
-        if (this->data->getID() == id)
+        if (curr->data == id) ///////////getid
         {
-            return this;
+            return curr;
         }
-        if (this->data->getID() > id)
+        if (curr->data > id) ////////////getid
         {
-            return this->left->FindItem(id);
+            return FindItem(curr->left, id);
         }
-        return this->right->FindItem(id);
+        return FindItem(curr->right, id);
     }
     //O(logn) n - size of the tree
     //return the node
-    Node<T> FindItem(int level, int id)
+    Node<T> *FindItem(int level, int id)
     {
         if (this == nullptr)
         {
@@ -126,17 +124,28 @@ public:
     }
 
     //get the min Node. O(logn), n-size of the tree
-    Node<T> *GetMinNode(Node<T> *curr)
+    Node<T> *Getpredecessor(Node<T> *curr)
     {
-        Node<T>* temp = curr;
-        while(temp->left != nullptr){
+        Node<T> *temp = curr;
+        while (temp->right != nullptr)
+        {
+            temp = temp->right;
+        }
+        return temp;
+    }
+
+    Node<T> *GetSuccesor(Node<T> *curr)
+    {
+        Node<T> *temp = curr;
+        while (temp->left != nullptr)
+        {
             temp = temp->left;
         }
         return temp;
     }
 
     AVLTree() : root(nullptr), size(0){};
-    
+
     ~AVLTree()
     {
         deleteTree(root);
@@ -171,7 +180,8 @@ public:
             curr->parent->right = temp;
         }
 
-        if (this->root == curr){
+        if (this->root == curr)
+        {
             this->root = temp;
         }
         curr->parent = temp;
@@ -186,10 +196,11 @@ public:
 
         Node<T> *temp = curr->right;
         curr->right = curr->right->left;
-        if(curr->right != nullptr){
+        if (curr->right != nullptr)
+        {
             curr->right->parent = curr;
         }
-        
+
         temp->left = curr;
         temp->parent = curr->parent;
 
@@ -202,7 +213,8 @@ public:
             curr->parent->right = temp;
         }
 
-        if(this->root == curr){
+        if (this->root == curr)
+        {
             this->root = temp;
         }
         curr->parent = temp;
@@ -245,7 +257,7 @@ public:
     }
 
     //O(logn) n - size of the tree
-    void AddItemAux(Node<T>* curr, T new_data)
+    void AddItemAux(Node<T> *curr, T new_data)
     {
         if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
         {
@@ -309,71 +321,133 @@ public:
             {
                 RL(curr);
             }
-
         }
         curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
     }
 
+    Node<T> *deleteNodeRec(Node<T> *curr, int key)
+    {
+        if (curr == nullptr)
+        {
+            return curr;
+        }
+
+        //We now locate in recursion the location of the node we want to remove
+        if (curr->data > key) ///////////////
+        {
+            curr->left = deleteNodeRec(curr->left, key);
+        }
+        else if (curr->data < key) /////////////////////
+        {
+            curr->right = deleteNodeRec(curr->right, key);
+        }
+        else
+        {
+            Node<T> *node_replace;
+            if (curr->left == nullptr && curr->right == nullptr) // the node is a leaf
+            {
+                delete curr;
+                return nullptr;
+            }
+            else
+            {
+                if (curr->left != nullptr)
+                {
+                    node_replace = Getpredecessor(curr->left);
+                    if (node_replace != curr->left)
+                    {
+                        node_replace->left = curr->left;
+                        if (node_replace->left != nullptr)
+                        {
+                            node_replace->left->parent = node_replace;
+                        }
+                    }
+                    node_replace->right = curr->right;
+                    if (node_replace->right != nullptr)
+                    {
+                        node_replace->right->parent = node_replace;
+                    }
+                }
+                else if (curr->right != nullptr)
+                {
+                    node_replace = GetSuccesor(curr->right);
+                    if (node_replace != curr->right)
+                    {
+                        node_replace->right = curr->right;
+                        if (node_replace->right != nullptr)
+                        {
+                            node_replace->right->parent = node_replace;
+                        }
+                    }
+                    node_replace->left = curr->left;
+                    if (node_replace->left != nullptr)
+                    {
+                        node_replace->left->parent = node_replace;
+                    }
+                }
+                if (node_replace->parent->left == node_replace)
+                {
+                    node_replace->parent->left = nullptr;
+                }
+                else
+                {
+                    node_replace->parent->right = nullptr;
+                }
+                node_replace->parent = curr->parent;
+                Node<T> *temp = curr;
+                if (this->root == curr)
+                {
+                    this->root = node_replace;
+                }
+                curr = node_replace;
+                delete temp;
+            }
+        }
+
+        if (curr == nullptr)
+            return nullptr;
+
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
+
+        //Fixing the Tree
+        int bf = curr->BFcalc(curr);
+        if (bf == 2)
+        {
+            if (curr->BFcalc(curr->left) >= 0)
+            {
+                LL(curr);
+            }
+            else
+            { //bf = -1
+                LR(curr);
+            }
+            return curr->parent;
+        }
+        else if (bf == -2)
+        {
+            if (curr->BFcalc(curr->right) <= 0)
+            {
+                RR(curr);
+            }
+            else
+            {
+                RL(curr);
+            }
+            return curr->parent;
+        }
+
+        return curr;
+    }
+
     void removeItem(int id)
     {
-        Node<T> *node_to_remove = FindItem(id);
-        if (node_to_remove == nullptr)
+        if (!isExists(id))
         {
             throw PlayerNotExsist();
         }
- 
-        if (node_to_remove->left == nullptr && node_to_remove->right == nullptr) // is leaf
-        {
-            if(node_to_remove->parent == nullptr) // is root
-            {
-                delete node_to_remove;
-                return;
-            }
-            else if(node_to_remove == node_to_remove->parent->left){
-                node_to_remove->parent->left = nullptr;
-            }
-            else if (node_to_remove == node_to_remove->parent->right)
-            {
-                node_to_remove->parent->right = nullptr;
-            }
 
-            delete node_to_remove;
-        }
-        else if (node_to_remove->left == nullptr && node_to_remove->right != nullptr)
-        {
-            if (node_to_remove->parent == nullptr) // is root
-            {
-                node_to_remove->right->parent = nullptr;
-                delete node_to_remove;
-                return;
-            }
-            else if (node_to_remove == node_to_remove->parent->left)
-            {
-                node_to_remove->parent->left = node_to_remove->right;
-            }
-            else if (node_to_remove == node_to_remove->parent->right)
-            {
-                node_to_remove->parent->right = node_to_remove->right;
-            }
-            node_to_remove->right->parent = node_to_remove->parent;
-            delete node_to_remove;
-        }
-        else if(node_to_remove->left != nullptr)
-        {
-            Node<T> *min_replace = GetMinNode(node_to_remove);
-            Node<T> temp_p = min_replace->parent;
-            min_replace->parent->left = node_to_remove;
-            min_replace->parent = node_to_remove->parent;
-            if(node_to_remove->parent != nullptr && node_to_remove == node_to_remove->parent->left)
-            {
-                node_to_remove->parent->left = min_replace;
-            }
-            else if (node_to_remove->parent != nullptr && node_to_remove == node_to_remove->parent->right)
-            {
-                node_to_remove->parent->right = min_replace;
-            }
-            node_to_remove->parent = temp_p;
-        }
+        deleteNodeRec(this->root, id);
+        size--;
     }
 
     int getSize()
@@ -383,7 +457,7 @@ public:
 
     bool isExists(int id)
     {
-        if (this->FindItem(id) == nullptr)
+        if (this->FindItem(this->root, id) == nullptr)
         {
             return false;
         }
@@ -392,7 +466,7 @@ public:
 
     T getData(int id)
     {
-        Node<T> *temp = FindItem(id);
+        Node<T> *temp = FindItem(this->root, id);
         if (temp == nullptr)
             return nullptr;
 
@@ -418,8 +492,6 @@ public:
     {
         print_tree(root);
     }
-
-    
 };
 
 #endif

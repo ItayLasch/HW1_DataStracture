@@ -4,8 +4,6 @@
 int main()
 {
     AVLTree<int> tr = AVLTree<int>();
-    std::cout << "size: " << tr.getSize() << std::endl;
-
     tr.AddItem(9);
     tr.AddItem(18);
     tr.AddItem(7);
@@ -17,7 +15,41 @@ int main()
     tr.AddItem(45);
     tr.AddItem(41);
     std::cout << "size: " << tr.getSize() << std::endl;
-
-    std::cout << std::endl;
     tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(40);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(18);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(0);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(7);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(20);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(4);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(45);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
 }
