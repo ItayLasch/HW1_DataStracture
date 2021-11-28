@@ -67,4 +67,6 @@ int main()
     std::cout << "size: " << tr.getSize() << std::endl;
     tr.print();
     std::cout << std::endl;
+
+    return 0;
 }

@@ -236,6 +236,10 @@ public:
 
     void print_tree(Node<T> *node)
     {
+        if(size == 0)
+        {
+            return;
+        }
         if (node == nullptr)
         {
             return;
@@ -334,29 +338,7 @@ public:
             }
         }
 
-        int bf = curr->BFcalc(curr);
-        if (bf == 2)
-        {
-            if (curr->BFcalc(curr->left) >= 0)
-            {
-                LL(curr);
-            }
-            else
-            { //bf = -1
-                LR(curr);
-            }
-        }
-        else if (bf == -2)
-        {
-            if (curr->BFcalc(curr->right) <= 0)
-            {
-                RR(curr);
-            }
-            else
-            {
-                RL(curr);
-            }
-        }
+        fixTree(curr);
         curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
     }
 
@@ -381,7 +363,7 @@ public:
             Node<T> *node_replace;
             if (curr->left == nullptr && curr->right == nullptr) // the node is a leaf
             {
-                delete curr;
+                curr = nullptr;
                 return nullptr;
             }
             else
