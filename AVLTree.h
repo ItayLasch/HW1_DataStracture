@@ -240,9 +240,44 @@ public:
         {
             return;
         }
-        print_tree(node->left);
+        if(node->left != nullptr){
+            print_tree(node->left);
+        }
         std::cout << node->data << " ";
-        print_tree(node->right);
+        if(node->right != nullptr){
+            print_tree(node->right);
+        }
+    }
+
+    Node<T>* fixTree(Node<T>* curr)
+    {
+        int bf = curr->BFcalc(curr);
+        if (bf == 2)
+        {
+            if (curr->BFcalc(curr->left) >= 0)
+            {
+                LL(curr);
+            }
+            else
+            { //bf = -1
+                LR(curr);
+            }
+            return curr->parent;
+        }
+        else if (bf == -2)
+        {
+            if (curr->BFcalc(curr->right) <= 0)
+            {
+                RR(curr);
+            }
+            else
+            {
+                RL(curr);
+            }
+            return curr->parent;
+        }
+
+        return curr;
     }
 
     void AddItem(const T new_data)
@@ -385,6 +420,7 @@ public:
                         node_replace->left->parent = node_replace;
                     }
                 }
+                
                 if (node_replace->parent->left == node_replace)
                 {
                     node_replace->parent->left = nullptr;
@@ -407,36 +443,11 @@ public:
         if (curr == nullptr)
             return nullptr;
 
+        //update height
         curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
 
         //Fixing the Tree
-        int bf = curr->BFcalc(curr);
-        if (bf == 2)
-        {
-            if (curr->BFcalc(curr->left) >= 0)
-            {
-                LL(curr);
-            }
-            else
-            { //bf = -1
-                LR(curr);
-            }
-            return curr->parent;
-        }
-        else if (bf == -2)
-        {
-            if (curr->BFcalc(curr->right) <= 0)
-            {
-                RR(curr);
-            }
-            else
-            {
-                RL(curr);
-            }
-            return curr->parent;
-        }
-
-        return curr;
+        return fixTree(curr);
     }
 
     void removeItem(int id)

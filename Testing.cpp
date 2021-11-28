@@ -52,4 +52,19 @@ int main()
     std::cout << "size: " << tr.getSize() << std::endl;
     tr.print();
     std::cout << std::endl;
+
+    tr.removeItem(41);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(9);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
+
+    tr.removeItem(50);
+    std::cout << "size: " << tr.getSize() << std::endl;
+    tr.print();
+    std::cout << std::endl;
 }
