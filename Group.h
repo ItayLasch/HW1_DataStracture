@@ -6,42 +6,46 @@
 class Group
 {
     int group_id;
-    AVLTree<Player*> players_by_id;
-    AVLTree<Player*> players_by_level;
-    Player *highest_level_player;
+    AVLTree<std::shared_ptr<Player>> players_by_level;
+    std::shared_ptr<Player> highest_level_player;
 
-    public:
-        Group(int GroupID){
-            this->group_id = GroupID;
-            this->players_by_id = AVLTree<Player*>();
-            this->players_by_level = AVLTree<Player*>();
-            this->highest_level_player = nullptr;
-        }
+public:
+    Group(int GroupID) : group_id(GroupID){};
 
-        int getId()
-        {
-            return this->group_id;
-        }
+    ~Group() = default;
 
-        AVLTree<Player*>& getPlayersByID()
-        {
-            return players_by_id;
-        }
+    int getId()
+    {
+        return this->group_id;
+    }
 
-        AVLTree<Player*> &getPlayersByLevel()
-        {
-            return players_by_level;
-        }
+    AVLTree<std::shared_ptr<Player>> &getPlayersByLevel()
+    {
+        return this->players_by_level;
+    }
 
-        Player* GetHighestRanked()
-        {
-            return this->highest_level_player;
-        }
+    std::shared_ptr<Player> GetHighestRanked()
+    {
+        return this->highest_level_player;
+    }
 
-        void SetHighestRanked(Player* player)
-        {
-             this->highest_level_player = player;
-        }
+    void SetHighestRanked(std::shared_ptr<Player> player)
+    {
+            this->highest_level_player = player;
+    }
+        
+    bool operator==(const int id)
+    {
+        return group_id == id;
+    }
+
+    bool operator<(const int id){
+        return group_id < id;
+    }
+
+    bool operator>(const int id){
+        return group_id > id;
+    }
 };
 
 #endif

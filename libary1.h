@@ -45,6 +45,8 @@ extern "C"
 
     StatusType GetAllPlayersByLevel(void *DS, int GroupID, int **Players, int *numOfPlayers);
 
+    StatusType GetGroupsHighestLevel(void *DS, int numOfGroups, int **Players);
+
     void Quit(void **DS);
 
 #ifdef __cplusplus

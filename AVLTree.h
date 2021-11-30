@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cmath>
+#include <memory>
 #include "Exceptions.h"
 
 template <class T>
@@ -11,13 +12,14 @@ class AVLTree;
 template <class T>
 class Node
 {
-public:
+
     T data;
     Node<T> *left;
     Node<T> *right;
     Node<T> *parent;
     int height;
 
+public:
     Node(T data) : data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
     ~Node() = default;
     Node(const Node &other) = default;
@@ -52,8 +54,6 @@ public:
 template <class T>
 class AVLTree
 {
-
-public:
     Node<T> *root;
     int size;
 
@@ -80,50 +80,31 @@ public:
         }
         deleteTree(node->left);
         deleteTree(node->right);
-        delete (node);
+        Node<T> *temp = node;
+        node = nullptr;
+        delete (temp);
     }
 
     //O(logn) n - size of the tree
     //return the node
-    Node<T> *FindItem(Node<T> *curr, int id)
+    template <class Key>
+    Node<T> *FindItem(Node<T> *curr, Key key)
     {
         if (curr == nullptr)
         {
             return nullptr;
         }
-        if (curr->data == id) ///////////getid
+        if (curr->data == key)
         {
             return curr;
         }
-        if (curr->data > id) ////////////getid
+        if (curr->data > key)
         {
-            return FindItem(curr->left, id);
+            return FindItem(curr->left, key);
         }
-        return FindItem(curr->right, id);
-    }
-    //O(logn) n - size of the tree
-    //return the node
-    Node<T> *FindItem(int level, int id)
-    {
-        if (this == nullptr)
-        {
-            return nullptr;
-        }
-        if (this->data->getID() == id)
-        {
-            return this;
-        }
-        if (this->data->level > level || (this->data->level == level && this->data->id > id))
-        {
-            return this->left->FindItem(level, id);
-        }
-        else
-        {
-            return this->right->FindItem(id);
-        }
+        return FindItem(curr->right, key);
     }
 
-    //get the min Node. O(logn), n-size of the tree
     Node<T> *Getpredecessor(Node<T> *curr)
     {
         Node<T> *temp = curr;
@@ -144,16 +125,35 @@ public:
         return temp;
     }
 
-    AVLTree() : root(nullptr), size(0){};
-
-    ~AVLTree()
+    Node<T> *fixTree(Node<T> *curr)
     {
-        deleteTree(root);
-    }
+        int bf = curr->BFcalc(curr);
+        if (bf == 2)
+        {
+            if (curr->BFcalc(curr->left) >= 0)
+            {
+                LL(curr);
+            }
+            else
+            { //bf = -1
+                LR(curr);
+            }
+            return curr->parent;
+        }
+        else if (bf == -2)
+        {
+            if (curr->BFcalc(curr->right) <= 0)
+            {
+                RR(curr);
+            }
+            else
+            {
+                RL(curr);
+            }
+            return curr->parent;
+        }
 
-    AVLTree(const AVLTree &other) : size(other.size)
-    {
-        root = copy_tree(other.root, nullptr);
+        return curr;
     }
 
     void LL(Node<T> *curr)
@@ -234,74 +234,14 @@ public:
         LL(curr);
     }
 
-    void print_tree(Node<T> *node)
-    {
-        if(size == 0)
-        {
-            return;
-        }
-        if (node == nullptr)
-        {
-            return;
-        }
-        if(node->left != nullptr){
-            print_tree(node->left);
-        }
-        std::cout << node->data << " ";
-        if(node->right != nullptr){
-            print_tree(node->right);
-        }
-    }
-
-    Node<T>* fixTree(Node<T>* curr)
-    {
-        int bf = curr->BFcalc(curr);
-        if (bf == 2)
-        {
-            if (curr->BFcalc(curr->left) >= 0)
-            {
-                LL(curr);
-            }
-            else
-            { //bf = -1
-                LR(curr);
-            }
-            return curr->parent;
-        }
-        else if (bf == -2)
-        {
-            if (curr->BFcalc(curr->right) <= 0)
-            {
-                RR(curr);
-            }
-            else
-            {
-                RL(curr);
-            }
-            return curr->parent;
-        }
-
-        return curr;
-    }
-
-    void AddItem(const T new_data)
-    {
-        if (this->root == nullptr)
-        {
-            root = new Node<T>(new_data);
-        }
-        else
-            AddItemAux(root, new_data);
-        this->size++;
-    }
-
     //O(logn) n - size of the tree
-    void AddItemAux(Node<T> *curr, T new_data)
+    template <class Key>
+    void AddItemAux(Node<T> *curr, T new_data, Key key)
     {
+        Node<T> *new_node = new Node<T>(new_data);
         if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
         {
-            Node<T> *new_node = new Node<T>(new_data);
-            if (curr->data > new_data)
+            if (curr->data > key)
             {
                 curr->left = new_node;
             }
@@ -311,38 +251,37 @@ public:
             }
             new_node->parent = curr;
         }
-        else if (curr->data > new_data)
+        else if (curr->data > key)
         {
             if (curr->left == nullptr)
             {
-                Node<T> *new_node = new Node<T>(new_data);
                 curr->left = new_node;
                 new_node->parent = curr;
             }
             else
             {
-                AddItemAux(curr->left, new_data);
+                AddItemAux(curr->left, new_data, key);
             }
         }
         else
         {
             if (curr->right == nullptr)
             {
-                Node<T> *new_node = new Node<T>(new_data);
                 curr->right = new_node;
                 new_node->parent = curr;
             }
             else
             {
-                AddItemAux(curr->right, new_data);
+                AddItemAux(curr->right, new_data, key);
             }
         }
 
-        fixTree(curr);
         curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
+        fixTree(curr);
     }
 
-    Node<T> *deleteNodeRec(Node<T> *curr, int key)
+    template <class Key>
+    Node<T> *deleteNodeRec(Node<T> *curr, Key key)
     {
         if (curr == nullptr)
         {
@@ -363,7 +302,11 @@ public:
             Node<T> *node_replace;
             if (curr->left == nullptr && curr->right == nullptr) // the node is a leaf
             {
-                curr = nullptr;
+                if (this->root == curr)
+                {
+                    this->root = nullptr;
+                }
+                delete curr;
                 return nullptr;
             }
             else
@@ -402,7 +345,7 @@ public:
                         node_replace->left->parent = node_replace;
                     }
                 }
-                
+
                 if (node_replace->parent->left == node_replace)
                 {
                     node_replace->parent->left = nullptr;
@@ -432,14 +375,67 @@ public:
         return fixTree(curr);
     }
 
-    void removeItem(int id)
+    void inOrderToArrayAux(Node<T> *curr, T *arr, int size, int *index)
     {
-        if (!isExists(id))
+        if (curr == nullptr || *index >= size)
         {
-            throw PlayerNotExsist();
+            return;
         }
+        inorder_to_array(curr->left, arr, index);
+        arr[*(++index)] = curr->data;
+        inorder_to_array(curr->right, arr, index);
+    }
 
-        deleteNodeRec(this->root, id);
+    void print_tree(Node<T> *node)
+    {
+        if (size == 0)
+        {
+            return;
+        }
+        if (node == nullptr)
+        {
+            return;
+        }
+        if (node->left != nullptr)
+        {
+            print_tree(node->left);
+        }
+        std::cout << node->data << " ";
+        if (node->right != nullptr)
+        {
+            print_tree(node->right);
+        }
+    }
+
+public:
+    AVLTree() : root(nullptr), size(0){};
+
+    ~AVLTree()
+    {
+        deleteTree(root);
+    }
+
+    AVLTree(const AVLTree &other) : size(other.size)
+    {
+        root = copy_tree(other.root, nullptr);
+    }
+
+    template <class Key>
+    void AddItem(const T new_data, Key key)
+    {
+        if (this->root == nullptr)
+        {
+            root = new Node<T>(new_data);
+        }
+        else
+            AddItemAux(root, new_data, key);
+        this->size++;
+    }
+
+    template <class Key>
+    void removeItem(Key key)
+    {
+        deleteNodeRec(this->root, key);
         size--;
     }
 
@@ -448,43 +444,68 @@ public:
         return this->size;
     }
 
-    bool isExists(int id)
+    template <class Key>
+    bool isExists(Key key)
     {
-        if (this->FindItem(this->root, id) == nullptr)
+        if (this->FindItem(this->root, key) == nullptr)
         {
             return false;
         }
         return true;
     }
 
-    T getData(int id)
+    Node<T> *getRoot()
     {
-        Node<T> *temp = FindItem(this->root, id);
+        return this->root;
+    }
+
+    template <class Key>
+    T getData(Key key)
+    {
+        Node<T> *temp = FindItem(this->root, key);
         if (temp == nullptr)
             return nullptr;
 
         return temp->getDataNode();
     }
 
-    //O(logn) n-number of players in the group
-    T getMax()
+    T FindMax()
     {
-        if (this->root == nullptr)
-        {
-            throw EmptyDataSystem();
-        }
         Node<T> *temp = this->root;
         while (temp->right != nullptr)
         {
             temp = temp->right;
         }
+
         return temp->data;
+    }
+
+    void inOrderToArray(T* arr, int size){
+        int i = 0;
+        inOrderToArrayAux(this->root, arr, size, &i);
     }
 
     void print()
     {
         print_tree(root);
     }
+
+
+    static void TransferItems(Node<T> *curr, AVLTree<T> &other_tree);
 };
+
+template <class T>
+void AVLTree<T>::TransferItems(Node<T> *curr, AVLTree<T> &other_tree)
+{
+    if (curr == nullptr)
+    {
+        return;
+    }
+
+    transferRec(curr->left, other_tree);
+    other_tree.AddItem(curr->data, curr->data);
+    transferRec(curr->right, other_tree);
+}
+
 
 #endif

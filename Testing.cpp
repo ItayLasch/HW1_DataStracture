@@ -4,16 +4,16 @@
 int main()
 {
     AVLTree<int> tr = AVLTree<int>();
-    tr.AddItem(9);
-    tr.AddItem(18);
-    tr.AddItem(7);
-    tr.AddItem(20);
-    tr.AddItem(40);
-    tr.AddItem(4);
-    tr.AddItem(0);
-    tr.AddItem(50);
-    tr.AddItem(45);
-    tr.AddItem(41);
+    tr.AddItem(9,9);
+    tr.AddItem(18,18);
+    tr.AddItem(7,7);
+    tr.AddItem(20,20);
+    tr.AddItem(40,40);
+    tr.AddItem(4,4);
+    tr.AddItem(0,0);
+    tr.AddItem(50,50);
+    tr.AddItem(45, 45);
+    tr.AddItem(41, 41);
     std::cout << "size: " << tr.getSize() << std::endl;
     tr.print();
     std::cout << std::endl;
