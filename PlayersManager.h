@@ -2,15 +2,14 @@
 #define PLAYERS_MANAGER_H
 #include "AVLTree.h"
 #include "Group.h"
-#include "Player.h"
 #include "Exceptions.h"
 
 class PlayersManager
 {
-    AVLTree<std::shared_ptr<Group>> Groups;
-    AVLTree<std::shared_ptr<Player>> Players_by_ID;
-    AVLTree<std::shared_ptr<Player>> Players_by_Level;
-    AVLTree<std::shared_ptr<Group>> Filled_Groups;
+    AVLTree<std::shared_ptr<Group>,int> Groups;
+    AVLTree<std::shared_ptr<Player>,int> Players_by_ID;
+    AVLTree<std::shared_ptr<Player>,Player> Players_by_Level;
+    AVLTree<std::shared_ptr<Group>,int> Filled_Groups;
     std::shared_ptr<Player> Highest_ranked_player;
 
 public:

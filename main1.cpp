@@ -68,6 +68,8 @@ extern "C"
             return "FAILURE";
         case INVALID_INPUT:
             return "INVALID_INPUT";
+        case UNKNOWN_ERROR:
+            return "UNKNOWN_ERROR";
         default:
             return "";
         }

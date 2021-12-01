@@ -1,0 +1,3 @@
+C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build/CMakeFiles/Test1.dir
+C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build/CMakeFiles/edit_cache.dir
+C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build/CMakeFiles/rebuild_cache.dir

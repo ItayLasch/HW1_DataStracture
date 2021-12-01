@@ -1,0 +1,59 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.0.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "HW1_DataStracture",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Test1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Test1-Debug-f1d4f1d80b23609dff02.json",
+					"name" : "Test1",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build",
+		"source" : "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 2
+	}
+}
