@@ -19,8 +19,7 @@ class Node
     Node<T, Key> *parent;
     int height;
 
-public:
-    Node(Key key, T data) :key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
+    Node(Key &key, T data) :key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
     ~Node() = default;
     Node(const Node<T, Key> &other) = default;
     Node &operator=(const Node &other) = default;
@@ -36,11 +35,9 @@ public:
 
     int static GetHeight(Node<T,Key> *node)
     {
-        if (node == nullptr)
-        {
+        if (node == nullptr){
             return -1;
         }
-
         return node->height;
     }
 
@@ -52,7 +49,6 @@ public:
         }
         return GetHeight(curr->left) - GetHeight(curr->right);
     }
-
     friend AVLTree<T,Key>;
 };
 
@@ -79,8 +75,7 @@ class AVLTree
 
     void deleteTree(Node<T, Key> *node)
     {
-        if (node == nullptr)
-        {
+        if (node == nullptr){
             return;
         }
         deleteTree(node->left);
@@ -92,7 +87,7 @@ class AVLTree
 
     //O(logn) n - size of the tree
     //return the node
-    Node<T, Key> *FindItem(Node<T, Key> *curr, Key key)
+    Node<T, Key> *FindItem(Node<T, Key> *curr, Key& key)
     {
         if (curr == nullptr)
         {
@@ -239,7 +234,7 @@ class AVLTree
     }
 
     //O(logn) n - size of the tree
-    void AddItemAux(Node<T, Key> *curr, T new_data, Key key)
+    void AddItemAux(Node<T, Key> *curr, T new_data, Key& key)
     {
         Node<T, Key> *new_node = new Node<T, Key>(key, new_data);
         if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
@@ -263,6 +258,7 @@ class AVLTree
             }
             else
             {
+                delete new_node;
                 AddItemAux(curr->left, new_data, key);
             }
         }
@@ -275,6 +271,7 @@ class AVLTree
             }
             else
             {
+                delete new_node;
                 AddItemAux(curr->right, new_data, key);
             }
         }
@@ -283,7 +280,7 @@ class AVLTree
         fixTree(curr);
     }
 
-    Node<T, Key> *deleteNodeRec(Node<T, Key> *curr, Key key)
+    Node<T, Key> *deleteNodeRec(Node<T, Key> *curr,const Key& key)
     {
         if (curr == nullptr)
         {
@@ -291,11 +288,11 @@ class AVLTree
         }
 
         //We now locate in recursion the location of the node we want to remove
-        if (curr->key > key) ///////////////
+        if (curr->key > key) 
         {
             curr->left = deleteNodeRec(curr->left, key);
         }
-        else if (curr->key < key) /////////////////////
+        else if (curr->key < key) 
         {
             curr->right = deleteNodeRec(curr->right, key);
         }
@@ -451,7 +448,20 @@ public:
         root = copy_tree(other.root, nullptr);
     }
 
-    void AddItem(const T new_data, Key key)
+    AVLTree &operator=(const AVLTree &other)
+    {
+        if (this == &other){
+            return *this;
+        }
+
+        this->deleteTree(this->root);
+        this->root = this->copy_tree(other.root, nullptr);
+        this->size = other.size;
+
+        return *this;
+    }
+
+    void AddItem(const T new_data, Key &key)
     {
         if (this->root == nullptr)
         {
@@ -462,7 +472,7 @@ public:
         this->size++;
     }
 
-    void removeItem(Key key)
+    void removeItem(const Key& key)
     {
         deleteNodeRec(this->root, key);
         size--;
@@ -473,7 +483,7 @@ public:
         return this->size;
     }
 
-    bool isExists(Key key)
+    bool isExists(Key &key)
     {
         if (this->FindItem(this->root, key) == nullptr)
         {
@@ -487,7 +497,7 @@ public:
         return this->root;
     }
 
-    T getData(Key key)
+    T getData(Key& key)
     {
         Node<T, Key> *temp = FindItem(this->root, key);
         if (temp == nullptr)
@@ -510,6 +520,7 @@ public:
     static void AVLTreeMerge(AVLTree<T, Key> &tr1, AVLTree<T, Key>& tr2, AVLTree<T, Key>& merge_tree){
         int s1 = tr1.getSize();
         int s2 = tr2.getSize();
+        merge_tree.size = s1 + s2;
         T *arrData1 = new T[s1];
         T *arrData2 = new T[s2];
         T *arrDataNew = new T[s1 + s2];
