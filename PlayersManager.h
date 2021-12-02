@@ -6,16 +6,16 @@
 
 class PlayersManager
 {
-    AVLTree<std::shared_ptr<Group>,int> Groups;
-    AVLTree<std::shared_ptr<Player>,int> Players_by_ID;
-    AVLTree<std::shared_ptr<Player>,PlayerKey> Players_by_Level;
-    AVLTree<std::shared_ptr<Group>,int> Filled_Groups;
+    AVLTree<std::shared_ptr<Player>, int> Players_by_ID;
+    AVLTree<std::shared_ptr<Player>, PlayerKey> Players_by_Level;
+    AVLTree<std::shared_ptr<Group>, int> Groups;
+    AVLTree<std::shared_ptr<Group>, int> Filled_Groups;
     std::shared_ptr<Player> Highest_ranked_player;
 
 public:
     PlayersManager();
 
-    ~PlayersManager() = default;
+    ~PlayersManager();
 
     PlayersManager(const PlayersManager &other) = default;
 
@@ -37,7 +37,7 @@ public:
 
     void GetGroupsHighestLevel(int numOfGroups, int **Players);
 
-    void Quit();
+    void Quit(PlayersManager* PM);
 };  
 
 #endif

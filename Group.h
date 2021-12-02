@@ -14,6 +14,10 @@ private:
 
 public:
     Player() : player_id(0), player_level(0), group_belonged(nullptr){};
+    ~Player()
+    {
+        this->group_belonged = nullptr;
+    }
     Player(int player_id, int level, std::shared_ptr<Group> g_belong) : player_id(player_id), player_level(level), group_belonged(g_belong){};
     Player &operator=(const Player &) = default;
     int get_id()
@@ -40,7 +44,7 @@ public:
     {
         this->player_level += levelIncrease;
     }
-    
+
 };
 
 class Group
@@ -59,7 +63,10 @@ public:
         this->highest_level_player = highest_level_player;
     }
 
-    ~Group() = default;
+    ~Group()
+    {
+        this->highest_level_player = nullptr;
+    }
 
     int getId()
     {
@@ -76,16 +83,15 @@ public:
         return this->highest_level_player;
     }
 
-    void updateGroupTree(AVLTree<std::shared_ptr<Player>, PlayerKey> &mergeTree)
+    void updateGroupTree(std::shared_ptr<Group> curr,AVLTree<std::shared_ptr<Player>, PlayerKey> &mergeTree)
     {
-        this->players_by_level = mergeTree;
-        this->highest_level_player = mergeTree.FindMax();
-        this->players_by_level.Inorder([&](std::shared_ptr<Player> p)
+        curr->players_by_level = mergeTree;
+        curr->highest_level_player = mergeTree.FindMax();
+        curr->players_by_level.Inorder([&](std::shared_ptr<Player> p)
                                        {
-        if(p->getGroup()->getId() != this->group_id)
+        if(p->getGroup()->getId() != curr->group_id)
         {
-            std::shared_ptr<Group> g(this);
-            p->SetGroup(g);
+            p->SetGroup(curr);
         } });
     }
 

@@ -219,5 +219,6 @@ void Quit(void **DS){
         return;
     }
 
-    ((PlayersManager *)DS)->Quit();
+    ((PlayersManager *)*DS)->Quit((PlayersManager *)*DS);
+    *DS = NULL;
 }

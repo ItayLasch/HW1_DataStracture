@@ -80,9 +80,7 @@ class AVLTree
         }
         deleteTree(node->left);
         deleteTree(node->right);
-        Node<T, Key> *temp = node;
-        node = nullptr;
-        delete (temp);
+        delete node;
     }
 
     //O(logn) n - size of the tree
@@ -440,6 +438,7 @@ public:
 
     ~AVLTree()
     {
+        //std::cout<< "delete tree of: " << typeid(root->data)->name() << "\n";
         deleteTree(root);
     }
 
@@ -461,7 +460,7 @@ public:
         return *this;
     }
 
-    void AddItem(const T new_data, Key &key)
+    void AddItem(const T new_data, Key key)
     {
         if (this->root == nullptr)
         {

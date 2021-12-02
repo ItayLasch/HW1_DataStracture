@@ -2,10 +2,15 @@
 
 PlayersManager::PlayersManager()
 {
-    this->Groups = AVLTree<std::shared_ptr<Group>, int>();
     this->Players_by_ID = AVLTree<std::shared_ptr<Player>, int>();
     this->Players_by_Level = AVLTree<std::shared_ptr<Player>, PlayerKey>();
+    this->Groups = AVLTree<std::shared_ptr<Group>, int>();
     this->Filled_Groups = AVLTree<std::shared_ptr<Group>, int>();
+    this->Highest_ranked_player = nullptr;
+}
+
+PlayersManager::~PlayersManager()
+{
     this->Highest_ranked_player = nullptr;
 }
 
@@ -16,7 +21,7 @@ void PlayersManager::AddGroup(int GroupID)
         throw GroupExist();
     }
 
-    std::shared_ptr<Group> newGroup(new Group(GroupID));
+    std::shared_ptr<Group> newGroup (new Group(GroupID));
     if (newGroup == nullptr)
     {
         throw NullArg();
@@ -38,8 +43,8 @@ void PlayersManager::AddPlayer(int PlayerID, int GroupID, int Level)
     }
 
     std::shared_ptr<Group> g = this->Groups.getData(GroupID);
-    Player p = Player(PlayerID, Level, g);
-    std::shared_ptr<Player> newP(new Player(p));
+
+    std::shared_ptr<Player> newP(new Player(PlayerID, Level, g));
     PlayerKey p_key = PlayerKey(PlayerID, Level);
     g->getPlayersByLevel().AddItem(newP, p_key);
     this->Players_by_ID.AddItem(newP, PlayerID);
@@ -89,6 +94,10 @@ void PlayersManager::RemovePlayer(int PlayerID)
     // remove from player_by_ID
     this->Players_by_ID.removeItem(PlayerID);
 
+    //remove from filled groups
+    int group_id = group_player->getId();
+    this->Filled_Groups.getData(group_id)->getPlayersByLevel().removeItem(pkey);
+
     // check if group is empty
     if (group_player->getPlayersByLevel().getSize() == 0)
     {
@@ -107,9 +116,13 @@ void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
     std::shared_ptr<Group> replace_group = this->Groups.getData(ReplacementID);
     AVLTree<std::shared_ptr<Player>, PlayerKey> mergeTree = AVLTree<std::shared_ptr<Player>, PlayerKey>();
     AVLTree<std::shared_ptr<Player>, PlayerKey>::AVLTreeMerge(group_to_delete->getPlayersByLevel(), replace_group->getPlayersByLevel(), mergeTree);
-    replace_group->updateGroupTree(mergeTree);
+    replace_group->updateGroupTree(replace_group,mergeTree);
+    if(group_to_delete->getPlayersByLevel().getSize() != 0)
+    {
+        this->Filled_Groups.removeItem(group_to_delete->getId());
+    }
     this->Groups.removeItem(group_to_delete->getId());
-
+    return;
 }
 
 void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
@@ -124,9 +137,11 @@ void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
     PlayerKey pKey(p->get_id(), p->getLevel());
     this->Players_by_Level.removeItem(pKey);
     g->getPlayersByLevel().removeItem(pKey);
+    int group_id = g->getId();
+    this->Filled_Groups.getData(group_id)->getPlayersByLevel().removeItem(pKey);
     p->SetLevel(LevelIncrease);
     pKey.ChangeLevel(p->getLevel());
-    
+
     if (p->getLevel() > this->Highest_ranked_player->getLevel())
     {
         this->Highest_ranked_player = p;
@@ -174,7 +189,6 @@ int PlayersManager::GetHighestLevel(int GroupID)
 
 void PlayersManager::GetAllPlayersByLevel(int GroupID, int **Players, int *numOfPlayers)
 {
-
     std::shared_ptr<Group> g = this->Groups.getData(GroupID);
     if (GroupID < 0)
     {
@@ -232,8 +246,7 @@ void PlayersManager::GetGroupsHighestLevel(int numOfGroups, int **Players)
     }
 
     int i = 0;
-    this->Filled_Groups.Inorder([&](std::shared_ptr<Group> g)
-                                {
+    this->Filled_Groups.Inorder([&](std::shared_ptr<Group> g){
         if(i == numOfGroups)
         {
             throw std::exception();
@@ -248,7 +261,7 @@ void PlayersManager::GetGroupsHighestLevel(int numOfGroups, int **Players)
     }
 }
 
-void PlayersManager::Quit()
+void PlayersManager::Quit(PlayersManager* PM)
 {
-    delete this;
+    delete PM;
 }
