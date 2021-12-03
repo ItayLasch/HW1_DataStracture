@@ -19,7 +19,7 @@ class Node
     Node<T, Key> *parent;
     int height;
 
-    Node(Key &key, T data) :key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
+    Node(Key &key, T& data) :key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
     ~Node() = default;
     Node(const Node<T, Key> &other) = default;
     Node &operator=(const Node &other) = default;
@@ -232,7 +232,7 @@ class AVLTree
     }
 
     //O(logn) n - size of the tree
-    void AddItemAux(Node<T, Key> *curr, T new_data, Key& key)
+    void AddItemAux(Node<T, Key> *curr, T& new_data, Key& key)
     {
         Node<T, Key> *new_node = new Node<T, Key>(key, new_data);
         if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
@@ -460,7 +460,7 @@ public:
         return *this;
     }
 
-    void AddItem(const T new_data, Key key)
+    void AddItem(T& new_data, Key key)
     {
         if (this->root == nullptr)
         {
@@ -581,9 +581,13 @@ public:
         }
 
         nodeInorder(node->left, f);
-        f(node->data);
+        if(node->data != nullptr){
+            f(node->data);
+        }
         nodeInorder(node->right, f);
     }
+
+
     
     void print()
     {
