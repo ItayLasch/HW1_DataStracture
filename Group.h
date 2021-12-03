@@ -65,6 +65,8 @@ public:
 
     ~Group()
     {
+       /* this->players_by_level.Inorder([&](std::shared_ptr<Player> p)
+                                       { p->SetGroup(nullptr); });*/
         this->highest_level_player = nullptr;
     }
 
@@ -83,7 +85,7 @@ public:
         return this->highest_level_player;
     }
 
-    void updateGroupTree(std::shared_ptr<Group> curr,AVLTree<std::shared_ptr<Player>, PlayerKey> &mergeTree)
+    static void updateGroupTree(std::shared_ptr<Group> curr,AVLTree<std::shared_ptr<Player>, PlayerKey> &mergeTree)
     {
         curr->players_by_level = mergeTree;
         curr->highest_level_player = mergeTree.FindMax();

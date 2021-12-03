@@ -74,8 +74,8 @@ void PlayersManager::RemovePlayer(int PlayerID)
     }
 
     std::shared_ptr<Player> player_removed = this->Players_by_ID.getData(PlayerID);
-
     std::shared_ptr<Group> group_player = player_removed->getGroup();
+
     PlayerKey pkey = PlayerKey(player_removed->get_id(), player_removed->getLevel());
     // remove from player_by_level
     this->Players_by_Level.removeItem(pkey);
@@ -93,10 +93,6 @@ void PlayersManager::RemovePlayer(int PlayerID)
 
     // remove from player_by_ID
     this->Players_by_ID.removeItem(PlayerID);
-
-    //remove from filled groups
-    int group_id = group_player->getId();
-    this->Filled_Groups.getData(group_id)->getPlayersByLevel().removeItem(pkey);
 
     // check if group is empty
     if (group_player->getPlayersByLevel().getSize() == 0)
@@ -116,12 +112,14 @@ void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
     std::shared_ptr<Group> replace_group = this->Groups.getData(ReplacementID);
     AVLTree<std::shared_ptr<Player>, PlayerKey> mergeTree = AVLTree<std::shared_ptr<Player>, PlayerKey>();
     AVLTree<std::shared_ptr<Player>, PlayerKey>::AVLTreeMerge(group_to_delete->getPlayersByLevel(), replace_group->getPlayersByLevel(), mergeTree);
-    replace_group->updateGroupTree(replace_group,mergeTree);
+    
     if(group_to_delete->getPlayersByLevel().getSize() != 0)
     {
         this->Filled_Groups.removeItem(group_to_delete->getId());
     }
     this->Groups.removeItem(group_to_delete->getId());
+
+    Group::updateGroupTree(replace_group, mergeTree);
     return;
 }
 
@@ -137,8 +135,6 @@ void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
     PlayerKey pKey(p->get_id(), p->getLevel());
     this->Players_by_Level.removeItem(pKey);
     g->getPlayersByLevel().removeItem(pKey);
-    int group_id = g->getId();
-    this->Filled_Groups.getData(group_id)->getPlayersByLevel().removeItem(pKey);
     p->SetLevel(LevelIncrease);
     pKey.ChangeLevel(p->getLevel());
 
@@ -264,4 +260,5 @@ void PlayersManager::GetGroupsHighestLevel(int numOfGroups, int **Players)
 void PlayersManager::Quit(PlayersManager* PM)
 {
     delete PM;
+    return;
 }
