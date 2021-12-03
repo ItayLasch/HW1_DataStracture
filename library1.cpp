@@ -189,13 +189,13 @@ StatusType GetAllPlayersByLevel(void *DS, int GroupID, int **Players, int *numOf
 
 StatusType GetGroupsHighestLevel(void *DS, int numOfGroups, int **Players)
 {
-    if(DS == NULL || *Players == NULL || numOfGroups < 1)
+    if(DS == NULL || Players == NULL || numOfGroups < 1)
     {
         return INVALID_INPUT;
     }
 
     try{
-        ((PlayersManager *)DS)->GetGroupsHighestLevel(numOfGroups, Players);
+        ((PlayersManager *) DS)->GetGroupsHighestLevel(numOfGroups, Players);
     }
     catch(NotEnoughGroups &e)
     {

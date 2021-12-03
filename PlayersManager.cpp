@@ -12,13 +12,12 @@ PlayersManager::PlayersManager()
 PlayersManager::~PlayersManager()
 {
     this->Players_by_ID.Inorder([&](std::shared_ptr<Player> p)
-    {   
+                                {   
         if(p->getGroup() != nullptr)
         {
             p->getGroup().reset();
             p->SetGroup(nullptr);
-        }
-    });
+        } });
 
     this->Highest_ranked_player.reset();
     this->Highest_ranked_player = nullptr;
@@ -96,7 +95,7 @@ void PlayersManager::RemovePlayer(int PlayerID)
     this->Players_by_Level.removeItem(pkey);
     if (player_removed == this->Highest_ranked_player)
     {
-        if(this->Players_by_Level.getSize() == 0)
+        if (this->Players_by_Level.getSize() == 0)
         {
             this->Highest_ranked_player = nullptr;
         }
@@ -110,11 +109,12 @@ void PlayersManager::RemovePlayer(int PlayerID)
     group_player->getPlayersByLevel().removeItem(pkey);
     if (player_removed == group_player->GetHighestRanked())
     {
-        if(group_player->getPlayersByLevel().getSize() == 0)
+        if (group_player->getPlayersByLevel().getSize() == 0)
         {
             group_player->SetHighestRanked(nullptr);
         }
-        else{
+        else
+        {
             group_player->SetHighestRanked(group_player->getPlayersByLevel().FindMax());
         }
     }
@@ -234,16 +234,16 @@ void PlayersManager::GetAllPlayersByLevel(int GroupID, int **Players, int *numOf
         *numOfPlayers = g->getPlayersByLevel().getSize();
     }
 
-    *Players = (int *)malloc(sizeof(int) * (*numOfPlayers));
-    if (*Players == NULL)
-    {
-        throw std::bad_alloc();
-    }
-
     if (*numOfPlayers == 0)
     {
-        Players = NULL;
+        *Players = NULL;
         return;
+    }
+
+    int *ret_arr = (int *)malloc(sizeof(int) * (*numOfPlayers));
+    if (!(ret_arr))
+    {
+        throw std::bad_alloc();
     }
     std::shared_ptr<Player> *tempArrData = new std::shared_ptr<Player>[*numOfPlayers];
     PlayerKey *tempArrKey = new PlayerKey[*numOfPlayers];
@@ -255,32 +255,45 @@ void PlayersManager::GetAllPlayersByLevel(int GroupID, int **Players, int *numOf
     {
         g->getPlayersByLevel().inOrderToArrays(tempArrData, tempArrKey, *numOfPlayers);
     }
-    delete[] tempArrKey;
+
     for (int i = 0; i < *numOfPlayers; i++)
     {
-        *Players[i] = (tempArrData[i]->get_id());
+        ret_arr[i] = (tempArrData[i]->get_id());
     }
+
+    delete[] tempArrKey;
     delete[] tempArrData;
+    *Players = ret_arr;
 }
 
 void PlayersManager::GetGroupsHighestLevel(int numOfGroups, int **Players)
 {
+    if(Players == nullptr)
+    {
+        throw NullArg();
+    }
+
     if (this->Filled_Groups.getSize() < numOfGroups)
     {
         throw NotEnoughGroups();
     }
 
-    *Players = (int *)malloc(sizeof(int) * numOfGroups);
+    int *ret_arr = (int *)malloc(sizeof(int) * (numOfGroups));
+    if (!(ret_arr))
+    {
+        throw std::bad_alloc();
+    }
     std::shared_ptr<Group> *tempArrData = new std::shared_ptr<Group>[numOfGroups];
     int *tempArrKey = new int[numOfGroups];
-    this->Groups.inOrderToArrays(tempArrData, tempArrKey, numOfGroups);
+    this->Filled_Groups.inOrderToArrays(tempArrData, tempArrKey, numOfGroups);
     for (int i = 0; i < numOfGroups; i++)
     {
-        int id = tempArrData[i]->getPlayersByLevel().FindMax()->get_id();
-        (*Players)[i] = id;
+        ret_arr[i] = tempArrData[i]->getPlayersByLevel().FindMax()->get_id();
     }
-    delete [] tempArrData;
-    delete [] tempArrKey;
+
+    delete[] tempArrData;
+    delete[] tempArrKey;
+    *Players = ret_arr;
     /*int i = 0;
     this->Filled_Groups.Inorder([&](std::shared_ptr<Group> g)
                                 {
