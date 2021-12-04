@@ -13,9 +13,23 @@ public:
     ~PlayerKey() = default;
     PlayerKey(const PlayerKey &other) = default;
     PlayerKey &operator=(const PlayerKey &other) = default;
+    int getLevel()
+    {
+        return this->player_level;
+    }
+
+    int getID()
+    {
+        return this->player_id;
+    }
+
     void ChangeLevel(int newLevel)
     {
         this->player_level = newLevel;
+    }
+    void ChangeID(int newID)
+    {
+        this->player_id = newID;
     }
 
     friend bool operator==(const PlayerKey &p1, const PlayerKey &p2)
@@ -35,7 +49,7 @@ public:
     friend bool operator<(const PlayerKey &p1, const PlayerKey &p2)
     {
         int res = p1.player_level - p2.player_level;
-        if (res < 0 || (res == 0 && p1.player_id < p2.player_id))
+        if (res < 0 || (res == 0 && p1.player_id > p2.player_id))
         {
             return true;
         }
@@ -89,7 +103,7 @@ class Group
 private:
     int group_id;
     AVLTree<std::shared_ptr<Player>, PlayerKey> players_by_level;
-    std::shared_ptr<Player> highest_level_player;
+    std::shared_ptr<Player>  highest_level_player;
 
 public:
     Group(int GroupID) : group_id(GroupID){};

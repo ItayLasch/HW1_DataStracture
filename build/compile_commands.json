@@ -1,6 +1,11 @@
 [
 {
   "directory": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build",
+  "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++11 -o CMakeFiles\\Test1.dir\\library1.cpp.obj -c \"C:\\Users\\itayl\\OneDrive - Technion\\Desktop\\Semesters\\semester_c\\Mivni\\Assignments\\HW1_WET\\HW1_DataStracture\\library1.cpp\"",
+  "file": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/library1.cpp"
+},
+{
+  "directory": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build",
   "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++11 -o CMakeFiles\\Test1.dir\\main1.cpp.obj -c \"C:\\Users\\itayl\\OneDrive - Technion\\Desktop\\Semesters\\semester_c\\Mivni\\Assignments\\HW1_WET\\HW1_DataStracture\\main1.cpp\"",
   "file": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/main1.cpp"
 },
@@ -8,10 +13,5 @@
   "directory": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build",
   "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++11 -o CMakeFiles\\Test1.dir\\PlayersManager.cpp.obj -c \"C:\\Users\\itayl\\OneDrive - Technion\\Desktop\\Semesters\\semester_c\\Mivni\\Assignments\\HW1_WET\\HW1_DataStracture\\PlayersManager.cpp\"",
   "file": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/PlayersManager.cpp"
-},
-{
-  "directory": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/build",
-  "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-g++.exe   -g -std=gnu++11 -o CMakeFiles\\Test1.dir\\library1.cpp.obj -c \"C:\\Users\\itayl\\OneDrive - Technion\\Desktop\\Semesters\\semester_c\\Mivni\\Assignments\\HW1_WET\\HW1_DataStracture\\library1.cpp\"",
-  "file": "C:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture/library1.cpp"
 }
 ]

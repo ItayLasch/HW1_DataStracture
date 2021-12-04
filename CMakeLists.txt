@@ -18,6 +18,6 @@ set(CMAKE_CPP_FLAGS ${MTM_FLAGS_DEBUG})
 
 
 # Add the names of your source files here
-set(CPP_FILES main1.cpp PlayersManager.cpp library1.cpp)
+set(CPP_FILES library1.cpp main1.cpp PlayersManager.cpp)
 
 add_executable(Test1 ${CPP_FILES})

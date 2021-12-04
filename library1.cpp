@@ -87,7 +87,7 @@ StatusType RemovePlayer(void *DS, int PlayerID)
 
 StatusType ReplaceGroup(void *DS, int GroupID, int ReplacementID)
 {
-    if(DS == NULL || GroupID <= 0 || ReplacementID <= 0 )
+    if(DS == NULL || GroupID <= 0 || ReplacementID <= 0 || GroupID == ReplacementID )
     {
         return INVALID_INPUT;
     }

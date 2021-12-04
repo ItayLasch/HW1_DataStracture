@@ -19,7 +19,7 @@ class Node
     Node<T, Key> *parent;
     int height;
 
-    Node(Key &key, T& data) :key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
+    Node(Key &key,const T &data) : key(key), data(data), left(nullptr), right(nullptr), parent(nullptr), height(0) {}
     ~Node() = default;
     Node(const Node<T, Key> &other) = default;
     Node &operator=(const Node &other) = default;
@@ -33,9 +33,10 @@ class Node
         return this->data;
     }
 
-    int static GetHeight(Node<T,Key> *node)
+    int static GetHeight(Node<T, Key> *node)
     {
-        if (node == nullptr){
+        if (node == nullptr)
+        {
             return -1;
         }
         return node->height;
@@ -49,16 +50,16 @@ class Node
         }
         return GetHeight(curr->left) - GetHeight(curr->right);
     }
-    friend AVLTree<T,Key>;
+    friend AVLTree<T, Key>;
 };
 
 template <class T, class Key>
 class AVLTree
 {
-    Node<T,Key> *root;
+    Node<T, Key> *root;
     int size;
 
-    //O(logn) n - size of the tree
+    // O(logn) n - size of the tree
     Node<T, Key> *copy_tree(Node<T, Key> *other, Node<T, Key> *parent)
     {
         if (other == nullptr)
@@ -75,7 +76,8 @@ class AVLTree
 
     void deleteTree(Node<T, Key> *node)
     {
-        if (node == nullptr){
+        if (node == nullptr)
+        {
             return;
         }
         deleteTree(node->left);
@@ -83,9 +85,9 @@ class AVLTree
         delete node;
     }
 
-    //O(logn) n - size of the tree
-    //return the node
-    Node<T, Key> *FindItem(Node<T, Key> *curr, Key& key)
+    // O(logn) n - size of the tree
+    // return the node
+    Node<T, Key> *FindItem(Node<T, Key> *curr,const Key &key)
     {
         if (curr == nullptr)
         {
@@ -132,9 +134,10 @@ class AVLTree
                 LL(curr);
             }
             else
-            { //bf = -1
+            { // bf = -1
                 LR(curr);
             }
+            // update height
             return curr->parent;
         }
         else if (bf == -2)
@@ -150,6 +153,8 @@ class AVLTree
             return curr->parent;
         }
 
+        // update height
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
         return curr;
     }
 
@@ -182,7 +187,7 @@ class AVLTree
             this->root = temp;
         }
         curr->parent = temp;
-        curr->height--;
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
     }
 
@@ -215,7 +220,7 @@ class AVLTree
             this->root = temp;
         }
         curr->parent = temp;
-        curr->height--;
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
         temp->height = std::max(temp->GetHeight(temp->left), temp->GetHeight(temp->right)) + 1;
     }
 
@@ -231,11 +236,11 @@ class AVLTree
         LL(curr);
     }
 
-    //O(logn) n - size of the tree
-    void AddItemAux(Node<T, Key> *curr, T& new_data, Key& key)
+    // O(logn) n - size of the tree
+    void AddItemAux(Node<T, Key> *curr,const T &new_data, Key &key)
     {
         Node<T, Key> *new_node = new Node<T, Key>(key, new_data);
-        if (curr->left == nullptr && curr->right == nullptr) //curr == leaf
+        if (curr->left == nullptr && curr->right == nullptr) // curr == leaf
         {
             if (curr->key > key)
             {
@@ -274,130 +279,96 @@ class AVLTree
             }
         }
 
-        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
         fixTree(curr);
     }
 
-    Node<T, Key> *deleteNodeRec(Node<T, Key> *curr,const Key& key)
+    Node<T, Key> *deleteNodeRec(Node<T, Key> *curr, const Key &key)
     {
         if (curr == nullptr)
         {
             return curr;
         }
 
-        //We now locate in recursion the location of the node we want to remove
-        if (curr->key > key) 
+        // We now locate in recursion the location of the node we want to remove
+        if (curr->key > key)
         {
             curr->left = deleteNodeRec(curr->left, key);
         }
-        else if (curr->key < key) 
+        else if (curr->key < key)
         {
             curr->right = deleteNodeRec(curr->right, key);
         }
         else
         {
-            Node<T, Key> *node_replace;
-            if (curr->left == nullptr && curr->right == nullptr) // the node is a leaf
+            if (curr->left == nullptr || curr->right == nullptr) // has on child or none
             {
-                if (this->root == curr)
+                Node<T,Key> *child = curr->left ? curr->left : curr->right;
+                if (child == nullptr) // node is leaf
                 {
-                    this->root = nullptr;
+                    child = curr;
+                    // disconnect current from his parent
+                    Node<T,Key> *parent = curr->parent;
+                    if (parent) // current is not the root of the tree
+                        parent->left == curr ? parent->left = nullptr : parent->right = nullptr;
+                    curr = nullptr;
                 }
-                delete curr;
-                return nullptr;
+                else // node has one child
+                {
+                    // copy content of child to current node
+                    curr->key = child->key;
+                    curr->data = child->data;
+                    curr->left = nullptr;
+                    curr->right = nullptr;
+                }
+                delete child;
+                child = nullptr;
             }
-            else
+            else // has 2 chidren
             {
-                if (curr->left != nullptr)
-                {
-                    node_replace = Getpredecessor(curr->left);
-                    if (node_replace != curr->left)
-                    {
-                        node_replace->left = curr->left;
-                        if (node_replace->left != nullptr)
-                        {
-                            node_replace->left->parent = node_replace;
-                        }
-                    }
-                    node_replace->right = curr->right;
-                    if (node_replace->right != nullptr)
-                    {
-                        node_replace->right->parent = node_replace;
-                    }
-                }
-                else if (curr->right != nullptr)
-                {
-                    node_replace = GetSuccesor(curr->right);
-                    if (node_replace != curr->right)
-                    {
-                        node_replace->right = curr->right;
-                        if (node_replace->right != nullptr)
-                        {
-                            node_replace->right->parent = node_replace;
-                        }
-                    }
-                    node_replace->left = curr->left;
-                    if (node_replace->left != nullptr)
-                    {
-                        node_replace->left->parent = node_replace;
-                    }
-                }
-
-                if (node_replace->parent->left == node_replace)
-                {
-                    node_replace->parent->left = nullptr;
-                }
-                else
-                {
-                    node_replace->parent->right = nullptr;
-                }
-                node_replace->parent = curr->parent;
-                Node<T, Key> *temp = curr;
-                if (this->root == curr)
-                {
-                    this->root = node_replace;
-                }
-                curr = node_replace;
-                delete temp;
+                Node<T,Key> *node_replace = Getpredecessor(curr->left);
+                curr->key = node_replace->key;
+                curr->data = node_replace->data;
+                curr->left = deleteNodeRec(curr->left, node_replace->key);
             }
         }
 
         if (curr == nullptr)
             return nullptr;
 
-        //update height
-        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
-
-        //Fixing the Tree
+        // Fixing the Tree
         return fixTree(curr);
     }
 
-    void inOrderToArraysAux(Node<T,Key> *curr, T *arrData, Key *arrKey, int size, int *index)
+    void inOrderToArraysAux(Node<T, Key> *curr, T *arrData, Key *arrKey, int size, int *index)
     {
         if (curr == nullptr || *index >= size)
         {
             return;
         }
         inOrderToArraysAux(curr->left, arrData, arrKey, size, index);
-        arrData[*(index)] = curr->data;
-        arrKey[*(index)] = curr->key;
-        (*index)++;
+        if(*index < size)
+        {
+            arrData[*(index)] = curr->data;
+            arrKey[*(index)] = curr->key;
+            (*index)++;
+        }
         inOrderToArraysAux(curr->right, arrData, arrKey, size, index);
     }
 
-    static Node<T, Key> *sortedArrayToBST_helper(T *arrData, Key* arrKey, int start, int end,int size_limit)//A - array of *Node
+    static Node<T, Key> *sortedArrayToBST_helper(T *arrData, Key *arrKey, int start, int end, int size_limit) // A - array of *Node
     {
         // continue while this branch has values to process
-        if(start > end){
-            return nullptr;
-        }
-        // Get the middle element and make it root
-        int mid = start + (end - start)/2;
-        if(mid == size_limit)
+        if (start > end)
         {
             return nullptr;
         }
-        Node<T, Key>* curr = new Node<T, Key>(arrKey[mid], arrData[mid]);
+        // Get the middle element and make it root
+        int mid = start + (end - start) / 2;
+        if (mid == size_limit)
+        {
+            return nullptr;
+        }
+        Node<T, Key> *curr = new Node<T, Key>(arrKey[mid], arrData[mid]);
         // Recursively construct the left subtree
         // and make it left child of root
         curr->left = sortedArrayToBST_helper(arrData, arrKey, start, mid - 1, size_limit);
@@ -407,9 +378,21 @@ class AVLTree
         return curr;
     }
 
+    void updateHeights(Node<T,Key> * curr)
+    {
+        if(curr == nullptr)
+        {
+            return;
+        }
+        updateHeights(curr->left);
+        updateHeights(curr->right);
+        curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
+    }
+
     static void sortedArrayToBST(T *AData, Key *AKey, int n, AVLTree<T, Key> &new_tree)
     {
-        new_tree.root = sortedArrayToBST_helper(AData, AKey, 0, n,n);
+        new_tree.root = sortedArrayToBST_helper(AData, AKey, 0, n, n);
+        new_tree.updateHeights(new_tree.root);
     }
 
     void print_tree(Node<T, Key> *node)
@@ -433,12 +416,28 @@ class AVLTree
         }
     }
 
+    template <typename Func>
+    void nodeInorder(Node<T, Key> *node, Func f)
+    {
+        if (node == nullptr)
+        {
+            return;
+        }
+
+        nodeInorder(node->left, f);
+        if (node->data != nullptr)
+        {
+            f(node->data);
+        }
+        nodeInorder(node->right, f);
+    }
+
 public:
     AVLTree() : root(nullptr), size(0){};
 
     ~AVLTree()
     {
-        //std::cout<< "delete tree of: " << typeid(root->data)->name() << "\n";
+        // std::cout<< "delete tree of: " << typeid(root->data)->name() << "\n";
         deleteTree(root);
     }
 
@@ -449,7 +448,8 @@ public:
 
     AVLTree &operator=(const AVLTree &other)
     {
-        if (this == &other){
+        if (this == &other)
+        {
             return *this;
         }
 
@@ -460,19 +460,29 @@ public:
         return *this;
     }
 
-    void AddItem(T& new_data, Key key)
+    void AddItem(const T &new_data, Key key)
     {
         if (this->root == nullptr)
         {
-            this->root = new Node<T, Key>(key,new_data);
+            this->root = new Node<T, Key>(key, new_data);
         }
         else
             AddItemAux(root, new_data, key);
         this->size++;
     }
 
-    void removeItem(const Key& key)
+    void removeItem(const Key &key)
     {
+        if(this->root->key == key)
+        {
+            if(this->root->left == nullptr && this->root->right==nullptr)
+            {
+                delete this->root;
+                this->root = nullptr;
+                size--;
+                return;
+            }
+        }
         deleteNodeRec(this->root, key);
         size--;
     }
@@ -482,7 +492,7 @@ public:
         return this->size;
     }
 
-    bool isExists(Key &key)
+    bool isExists(const Key &key)
     {
         if (this->FindItem(this->root, key) == nullptr)
         {
@@ -496,7 +506,7 @@ public:
         return this->root;
     }
 
-    T getData(Key& key)
+    T getData(Key &key)
     {
         Node<T, Key> *temp = FindItem(this->root, key);
         if (temp == nullptr)
@@ -516,7 +526,8 @@ public:
         return temp->data;
     }
 
-    static void AVLTreeMerge(AVLTree<T, Key> &tr1, AVLTree<T, Key>& tr2, AVLTree<T, Key>& merge_tree){
+    static void AVLTreeMerge(AVLTree<T, Key> &tr1, AVLTree<T, Key> &tr2, AVLTree<T, Key> &merge_tree)
+    {
         int s1 = tr1.getSize();
         int s2 = tr2.getSize();
         merge_tree.size = s1 + s2;
@@ -529,27 +540,30 @@ public:
         tr1.inOrderToArrays(arrData1, arrKey1, s1);
         tr2.inOrderToArrays(arrData2, arrKey2, s2);
         int index1 = 0, index2 = 0, index_new = 0;
-        while(index_new < s1 + s2){//merge the 2 arrays into 1
-            if(index1 == s1){
+        while (index_new < s1 + s2)
+        { // merge the 2 arrays into 1
+            if (index1 == s1)
+            {
                 arrKeyNew[index_new] = arrKey2[index2];
                 arrDataNew[index_new++] = arrData2[index2++];
                 continue;
             }
-            if(index2 == s2){
+            if (index2 == s2)
+            {
                 arrKeyNew[index_new] = arrKey1[index1];
                 arrDataNew[index_new++] = arrData1[index1++];
-                continue; 
+                continue;
             }
-            if(arrKey1[index1] > arrKey2[index2]){
+            if (arrKey1[index1] > arrKey2[index2])
+            {
                 arrKeyNew[index_new] = arrKey2[index2];
                 arrDataNew[index_new++] = arrData2[index2++];
                 continue;
             }
             arrKeyNew[index_new] = arrKey1[index1];
             arrDataNew[index_new++] = arrData1[index1++];
-            
         }
-        AVLTree<T,Key>::sortedArrayToBST(arrDataNew, arrKeyNew, s1 + s2, merge_tree);
+        AVLTree<T, Key>::sortedArrayToBST(arrDataNew, arrKeyNew, s1 + s2, merge_tree);
         delete[] arrData1;
         delete[] arrData2;
         delete[] arrDataNew;
@@ -558,37 +572,24 @@ public:
         delete[] arrKeyNew;
     }
 
-    void inOrderToArrays(T* arrData, Key* arrKey, int size){
+    void inOrderToArrays(T *arrData, Key *arrKey, int size)
+    {
         int i = 0;
         inOrderToArraysAux(this->root, arrData, arrKey, size, &i);
     }
 
-    template<typename Func>
+    template <typename Func>
     void Inorder(Func f)
     {
-        try{
+        try
+        {
             nodeInorder(this->root, f);
         }
-        catch (std::exception &e){}
-    }
-
-    template <typename Func>
-    void nodeInorder(Node<T, Key>* node, Func f)
-    {
-        if(node == nullptr)
+        catch (std::exception &e)
         {
-            return;
         }
-
-        nodeInorder(node->left, f);
-        if(node->data != nullptr){
-            f(node->data);
-        }
-        nodeInorder(node->right, f);
     }
 
-
-    
     void print()
     {
         print_tree(root);
