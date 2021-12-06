@@ -64,7 +64,7 @@ void PlayersManager::AddPlayer(int PlayerID, int GroupID, int Level)
     if (this->Highest_ranked_player == nullptr || Level > this->Highest_ranked_player->getLevel() ||
         (Level == this->Highest_ranked_player->getLevel() && PlayerID < this->Highest_ranked_player->get_id()))
     {
-        this->Highest_ranked_player = newP;
+        this->Highest_ranked_player = newP; 
     }
 
     if (g->GetHighestRanked() == nullptr || Level > g->GetHighestRanked()->getLevel() ||
@@ -114,6 +114,7 @@ void PlayersManager::RemovePlayer(int PlayerID)
         if (group_player->getPlayersByLevel().getSize() == 0)
         {
             group_player->SetHighestRanked(nullptr);
+            this->Filled_Groups.removeItem(group_player->getId());
         }
         else
         {
@@ -123,12 +124,6 @@ void PlayersManager::RemovePlayer(int PlayerID)
 
     // remove from player_by_ID
     this->Players_by_ID.removeItem(PlayerID);
-
-    // check if group is empty
-    if (group_player->getPlayersByLevel().getSize() == 0)
-    {
-        this->Filled_Groups.removeItem(group_player->getId());
-    }
 }
 
 void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
@@ -140,6 +135,8 @@ void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
 
     std::shared_ptr<Group> group_to_delete = this->Groups.getData(GroupID);
     std::shared_ptr<Group> replace_group = this->Groups.getData(ReplacementID);
+
+    // new tree that will hold both trees.
     AVLTree<std::shared_ptr<Player>, PlayerKey> *mergeTree = new AVLTree<std::shared_ptr<Player>, PlayerKey>();
     AVLTree<std::shared_ptr<Player>, PlayerKey>::AVLTreeMerge(group_to_delete->getPlayersByLevel(), replace_group->getPlayersByLevel(), *mergeTree);
     
@@ -153,13 +150,8 @@ void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
     // update the replaced_group tree
     Group::updateGroupTree(replace_group, *mergeTree);
     delete mergeTree;
-    replace_group->getPlayersByLevel().Inorder([&](std::shared_ptr<Player> p)
-    {
-        if(p->getGroup()->getId() != replace_group->getId())
-        {
-            p->SetGroup(replace_group);
-        } });
-
+    
+    //add the replacing group to the filled gorups tree if she's not empty
     if (this->Filled_Groups.isExists(replace_group->getId()) == false &&
         replace_group->getPlayersByLevel().getSize() != 0)
     {
@@ -178,11 +170,16 @@ void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
     std::shared_ptr<Player> p = this->Players_by_ID.getData(PlayerID);
     std::shared_ptr<Group> g = p->getGroup();
     PlayerKey pKey(p->get_id(), p->getLevel());
+
+    //remove the player from the trees sorted by level
     this->Players_by_Level.removeItem(pKey);
     g->getPlayersByLevel().removeItem(pKey);
+
+    //increase player's level
     p->SetLevel(LevelIncrease);
     pKey.ChangeLevel(p->getLevel());
 
+    //update Highest ranked players
     if (p->getLevel() > this->Highest_ranked_player->getLevel() || 
         (p->getLevel() == this->Highest_ranked_player->getLevel() && p->get_id() < this->Highest_ranked_player->get_id()))
     {
@@ -193,6 +190,8 @@ void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
     {
         g->SetHighestRanked(p);
     }
+
+    //Insert the player back into the trees sorted by level
     this->Players_by_Level.AddItem(p, pKey);
     g->getPlayersByLevel().AddItem(p, pKey);
 }

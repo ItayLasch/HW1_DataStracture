@@ -135,23 +135,30 @@ public:
         return this->highest_level_player;
     }
 
-    static void updateGroupTree(std::shared_ptr<Group> curr,AVLTree<std::shared_ptr<Player>, PlayerKey> &mergeTree)
-    {
-        curr->players_by_level = mergeTree;
-        if(mergeTree.getSize() == 0)
-        {
-            curr->highest_level_player = nullptr;
-        }
-        else
-        {
-            curr->highest_level_player = mergeTree.FindMax();
-        }
-    }
-
     void SetHighestRanked(std::shared_ptr<Player> player)
     {
         this->highest_level_player = player;
     }
+
+    static void updateGroupTree(std::shared_ptr<Group> group,AVLTree<std::shared_ptr<Player>, PlayerKey> &other_tree)
+    {
+        group->players_by_level = other_tree;
+        if(other_tree.getSize() == 0)
+        {
+            group->highest_level_player = nullptr;
+        }
+        else
+        {
+            group->highest_level_player = other_tree.FindMax();
+        }
+
+        group->getPlayersByLevel().Inorder([&](std::shared_ptr<Player> p)
+                                           {
+        if(p->getGroup()->getId() != group->getId())
+        {
+            p->SetGroup(group);
+        } });
+    }    
 };
 
 #endif

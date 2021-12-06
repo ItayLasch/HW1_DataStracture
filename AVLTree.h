@@ -59,7 +59,8 @@ class AVLTree
     Node<T, Key> *root;
     int size;
 
-    // O(logn) n - size of the tree
+    // O(n)  n - size of the tree
+    //  copies all the nodes
     Node<T, Key> *copy_tree(Node<T, Key> *other, Node<T, Key> *parent)
     {
         if (other == nullptr)
@@ -74,6 +75,8 @@ class AVLTree
         return new_node;
     }
 
+    //O(n) n - size of the tree
+    // deletes all the nodes
     void deleteTree(Node<T, Key> *node)
     {
         if (node == nullptr)
@@ -110,16 +113,6 @@ class AVLTree
         while (temp->right != nullptr)
         {
             temp = temp->right;
-        }
-        return temp;
-    }
-
-    Node<T, Key> *GetSuccesor(Node<T, Key> *curr)
-    {
-        Node<T, Key> *temp = curr;
-        while (temp->left != nullptr)
-        {
-            temp = temp->left;
         }
         return temp;
     }
@@ -302,14 +295,30 @@ class AVLTree
         {
             if (curr->left == nullptr || curr->right == nullptr) // has on child or none
             {
-                Node<T,Key> *child = curr->left ? curr->left : curr->right;
+                Node<T, Key> *child;
+                if(curr->left)
+                {
+                    child = curr->left;
+                }
+                else
+                {
+                    child = curr->right;
+                }
                 if (child == nullptr) // node is leaf
                 {
                     child = curr;
                     // disconnect current from his parent
                     Node<T,Key> *parent = curr->parent;
-                    if (parent) // current is not the root of the tree
-                        parent->left == curr ? parent->left = nullptr : parent->right = nullptr;
+                    if (parent){
+                        if(parent -> left == curr)
+                        {
+                            parent->left = nullptr;
+                        }
+                        else
+                        {
+                            parent->right = nullptr;
+                        }
+                    }
                     curr = nullptr;
                 }
                 else // node has one child
@@ -357,7 +366,6 @@ class AVLTree
 
     static Node<T, Key> *sortedArrayToBST_helper(T *arrData, Key *arrKey, int start, int end, int size_limit) // A - array of *Node
     {
-        // continue while this branch has values to process
         if (start > end)
         {
             return nullptr;
@@ -369,51 +377,30 @@ class AVLTree
             return nullptr;
         }
         Node<T, Key> *curr = new Node<T, Key>(arrKey[mid], arrData[mid]);
-        // Recursively construct the left subtree
-        // and make it left child of root
+ 
         curr->left = sortedArrayToBST_helper(arrData, arrKey, start, mid - 1, size_limit);
-        // Recursively construct the right subtree
-        // and make it right child of root
+
         curr->right = sortedArrayToBST_helper(arrData, arrKey, mid + 1, end, size_limit);
         return curr;
     }
 
-    void updateHeights(Node<T,Key> * curr)
+    static void sortedArrayToBST(T *AData, Key *AKey, int n, AVLTree<T, Key> &new_tree)
     {
-        if(curr == nullptr)
+        new_tree.root = sortedArrayToBST_helper(AData, AKey, 0, n, n);
+
+        //update the merge tree elements heights
+        new_tree.updateHeights(new_tree.root);
+    }
+
+    void updateHeights(Node<T, Key> *curr)
+    {
+        if (curr == nullptr)
         {
             return;
         }
         updateHeights(curr->left);
         updateHeights(curr->right);
         curr->height = std::max(curr->GetHeight(curr->left), curr->GetHeight(curr->right)) + 1;
-    }
-
-    static void sortedArrayToBST(T *AData, Key *AKey, int n, AVLTree<T, Key> &new_tree)
-    {
-        new_tree.root = sortedArrayToBST_helper(AData, AKey, 0, n, n);
-        new_tree.updateHeights(new_tree.root);
-    }
-
-    void print_tree(Node<T, Key> *node)
-    {
-        if (size == 0)
-        {
-            return;
-        }
-        if (node == nullptr)
-        {
-            return;
-        }
-        if (node->left != nullptr)
-        {
-            print_tree(node->left);
-        }
-        std::cout << node->key << " ";
-        if (node->right != nullptr)
-        {
-            print_tree(node->right);
-        }
     }
 
     template <typename Func>
@@ -588,11 +575,6 @@ public:
         catch (std::exception &e)
         {
         }
-    }
-
-    void print()
-    {
-        print_tree(root);
     }
 };
 

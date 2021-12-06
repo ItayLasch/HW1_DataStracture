@@ -381,7 +381,7 @@ extern "C"
         }
         cout << "and there are no more players!" << endl;
 
-        free(playerIDs);
+        free(playerIDs);  
     }
 
     static errorType OnGetAllPlayersByLevel(void *DS, const char *const command)
