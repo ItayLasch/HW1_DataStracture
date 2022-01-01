@@ -1,0 +1,299 @@
+make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.82
+# Built for i686-pc-mingw32
+# Copyright (C) 2010  Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sat Jan 01 18:28:21 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# default
+.SHELLFLAGS := -c
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+HOMEDRIVE = C:
+# automatic
+@F = $(notdir $@)
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile
+CURDIR := c:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture
+# default
+SHELL := sh.exe
+# environment
+WINDIR = C:\Windows
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+ONEDRIVE = C:\Users\itayl\OneDrive - Technion
+# environment
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC
+# makefile
+MAKEFILE_LIST := 
+# environment
+TMP = C:\Users\itayl\AppData\Local\Temp
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+PROGRAMW6432 = C:\Program Files
+# environment
+PROGRAMDATA = C:\ProgramData
+# environment
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-18b98898-3aca-4703-bbd9-8297dcd9b272-sock
+# environment
+VSCODE_CWD = C:\Users\itayl\AppData\Local\Programs\Microsoft VS Code
+# environment
+SMLNJ_HOME = C:\Program Files (x86)\SMLNJ\
+# environment
+PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin\;C:\Program Files (x86)\LyX 2.3\Perl\bin;C:\Program Files\SourceGear\Common\DiffMerge\;C:\TDM-GCC-64\bin;C:\Program Files (x86)\Bitvise SSH Client;C:\Program Files\Git\cmd;C:\Program Files\MATLAB\R2021a\bin;C:\Program Files\CMake\bin;C:\FPC\3.2.2\bin\i386-Win32;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C:\Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C:\Program Files (x86)\SMLNJ\bin\;C:\Users\itayl\AppData\Local\Programs\Python\Python39\Scripts\;C:\Users\itayl\AppData\Local\Programs\Python\Python39\;C:\Users\itayl\AppData\Local\Microsoft\WindowsApps;C:\Users\itayl\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\CMake\bin;C:\TDM-GCC-64\bin;C:\Users\itayl\AppData\Local\GitHubDesktop\bin;C:\intelFPGA\20.1\modelsim_ase\win32aloem;C:\Users\itayl\AppData\Local\atom\bin
+# environment
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
+# environment
+PROCESSOR_ARCHITECTURE = x86
+# environment
+USERPROFILE = C:\Users\itayl
+# environment
+ALLUSERSPROFILE = C:\ProgramData
+# environment
+VSCODE_LOG_STACK = false
+# environment
+NUMBER_OF_PROCESSORS = 8
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine archives
+# automatic
+%F = $(notdir $%)
+# environment
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_20948_DNWBYGLKJXBKOFWZ
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+COMPUTERNAME = DESKTOP-G2IE3EV
+# environment
+PROGRAMFILES = C:\Program Files (x86)
+# environment
+DRIVERDATA = C:\Windows\System32\Drivers\DriverData
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+USERNAME = itayl
+# environment
+PUBLIC = C:\Users\Public
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+VSCODE_CODE_CACHE_PATH = C:\Users\itayl\AppData\Roaming\Code\CachedData\899d46d82c4c95423fb7e10e68eba52050e30ba3
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
+# environment
+LOGONSERVER = \\DESKTOP-G2IE3EV
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+USERDOMAIN = DESKTOP-G2IE3EV
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+ONEDRIVECOMMERCIAL = C:\Users\itayl\OneDrive - Technion
+# default
+MAKE_VERSION := 3.82
+# makefile
+.DEFAULT_GOAL := 
+# environment
+PROGRAMFILES(X86) = C:\Program Files (x86)
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+LOCALAPPDATA = C:\Users\itayl\AppData\Local
+# environment
+PSMODULEPATH = C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+# default
+MAKE_COMMAND := make.exe
+# environment
+PROCESSOR_ARCHITEW6432 = AMD64
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 126 Stepping 5, GenuineIntel
+# environment
+OS = Windows_NT
+# environment
+VSCODE_IPC_HOOK = \\.\pipe\b1bee1c569dba4a8a7bc9b991ae7d156-1.63.2-main-sock
+# environment
+HOMEPATH = \Users\itayl
+# environment
+COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
+# environment
+PROMPT = $P$G
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+SYSTEMROOT = C:\Windows
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# automatic
++F = $(notdir $+)
+# environment
+APPDATA = C:\Users\itayl\AppData\Roaming
+# environment
+TEMP = C:\Users\itayl\AppData\Local\Temp
+# environment
+COMSPEC = C:\Windows\system32\cmd.exe
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+SYSTEMDRIVE = C:
+# environment
+SESSIONNAME = Console
+# environment
+PROCESSOR_REVISION = 7e05
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+PROCESSOR_LEVEL = 6
+# environment
+VSCODE_PID = 20948
+# environment
+USERDOMAIN_ROAMINGPROFILE = DESKTOP-G2IE3EV
+# variable set hash-table stats:
+# Load=90/1024=9%, Rehash=0, Collisions=11/105=10%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# \Users\itayl\AppData\Local\Microsoft\WindowsApps;C: could not be stat'd.
+# \Program Files\Git\cmd;C: could not be stat'd.
+# \Windows\System32\OpenSSH\;C: could not be stat'd.
+# \Users\itayl\AppData\Local\GitHubDesktop\bin;C: could not be stat'd.
+# \Program Files (x86)\Bitvise SSH Client;C: could not be stat'd.
+# \Users\itayl\AppData\Local\Programs\Microsoft VS Code\bin;C: could not be stat'd.
+# . (key c:/Users/itayl/OneDrive - Technion/Desktop/Semesters/semester_c/Mivni/Assignments/HW1_WET/HW1_DataStracture, mtime 1638621452): 16 files, no impossibilities.
+# \Windows;C: could not be stat'd.
+# C: could not be stat'd.
+# \Windows\System32\Wbem;C: could not be stat'd.
+# \Program Files (x86)\Pulse Secure\VC142.CRT\X86\;C: could not be stat'd.
+# \Program Files\SourceGear\Common\DiffMerge\;C: could not be stat'd.
+# \Program Files\Common Files\Oracle\Java\javapath;C: could not be stat'd.
+# \Program Files (x86)\SMLNJ\bin\;C: could not be stat'd.
+# \Program Files (x86)\LyX 2.3\Perl\bin;C: could not be stat'd.
+# \FPC\3.2.2\bin\i386-Win32;C: could not be stat'd.
+# \Users\itayl\AppData\Local\Programs\Python\Python39\;C: could not be stat'd.
+# \Program Files (x86)\VMware\VMware Workstation\bin\;C: could not be stat'd.
+# \Windows\system32;C: could not be stat'd.
+# \intelFPGA\20.1\modelsim_ase\win32aloem;C: could not be stat'd.
+# \Program Files\CMake\bin;C: could not be stat'd.
+# \Program Files (x86)\Pulse Secure\VC142.CRT\X64\;C: could not be stat'd.
+# \Users\itayl\AppData\Local\Programs\Python\Python39\Scripts\;C: could not be stat'd.
+# \Program Files (x86)\MiKTeX 2.9\miktex\bin\;C: could not be stat'd.
+# \Windows\System32\WindowsPowerShell\v1.0\;C: could not be stat'd.
+# \Program Files (x86)\Common Files\Oracle\Java\javapath;C: could not be stat'd.
+# \Users\itayl\AppData\Local\atom\bin (key c:/Users/itayl/AppData/Local/atom/bin, mtime 1639490956): 6 files, no impossibilities.
+# \Program Files\MATLAB\R2021a\bin;C: could not be stat'd.
+# \TDM-GCC-64\bin;C: could not be stat'd.
+
+# 22 files, no impossibilities in 29 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+GNUmakefile:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# files hash-table stats:
+# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 0 / lookups = 58 / hits = 58
+# # of strcache buffers: 1 (* 8176 B/buffer = 8176 B)
+# strcache used: total = 0 (1335) / max = 0 / min = 8176 / avg = 0
+# strcache free: total = 0 (6841) / max = 0 / min = 8176 / avg = 0
+
+# strcache hash-table stats:
+# Load=54/8192=1%, Rehash=0, Collisions=3/58=5%
+# Finished Make data base on Sat Jan 01 18:28:21 2022
+
+ 
+make.exe: *** No rule to make target `all'.  Stop.
+ 

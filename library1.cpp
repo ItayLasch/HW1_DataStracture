@@ -28,7 +28,7 @@ StatusType AddGroup(void *DS, int GroupID)
     }
     catch(...)
     {
-        return UNKNOWN_ERROR;
+        return FAILURE;
     }
     return SUCCESS;
 }

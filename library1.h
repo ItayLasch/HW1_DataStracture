@@ -20,14 +20,13 @@ extern "C"
 #endif
 
     /* Return Values
- * ----------------------------------- */
+     * ----------------------------------- */
     typedef enum
     {
         SUCCESS = 0,
         FAILURE = -1,
         ALLOCATION_ERROR = -2,
-        INVALID_INPUT = -3,
-        UNKNOWN_ERROR = -4
+        INVALID_INPUT = -3
     } StatusType;
 
     void *Init();

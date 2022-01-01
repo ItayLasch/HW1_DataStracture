@@ -157,7 +157,6 @@ void PlayersManager::ReplaceGroup(int GroupID, int ReplacementID)
     {
         Filled_Groups.AddItem(replace_group, replace_group->getId());
     }
-    return;
 }
 
 void PlayersManager::IncreaseLevel(int PlayerID, int LevelIncrease)
@@ -311,5 +310,4 @@ void PlayersManager::GetGroupsHighestLevel(int numOfGroups, int **Players)
 void PlayersManager::Quit(PlayersManager *PM)
 {
     delete PM;
-    return;
 }
